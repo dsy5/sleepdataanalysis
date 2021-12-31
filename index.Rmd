@@ -5,14 +5,139 @@ description: |
 site: distill::distill_website
 ---
 
-```{r setup, include=FALSE}
+First, let's see how many times I slept before 10pm. I always make an effort to sleep before 10pm, as I strive to obtain a good health.
+
+
+
+```{r setup, include=FALSE, echo = FALSE}
 knitr::opts_chunk$set(echo = FALSE)
+library(tidyverse)
+library(dplyr)
+library(lubridate)
+library(plotly)
+library(gridExtra)
+library(ggpubr)
+library(ggplot2)
+library(gganimate)
+library(plotly)
 
-# Learn more about creating websites with Distill at:
-# https://rstudio.github.io/distill/website.html
 
-# Learn more about publishing to GitHub Pages at:
-# https://rstudio.github.io/distill/publish_website.html#github-pages
+data <- read_csv("/Applications/sleep.csv")
+```
+
+
+```{r, echo = FALSE}
+data1 <- data
+
+data1 <- data1%>%
+  mutate("minutes" = hour(data1$sleep_hr)*60 + minute(data1$sleep_hr))%>%
+  mutate(over10 = if_else(minutes < 470.0, TRUE, FALSE))
+data1%>%
+  group_by(over10)%>%
+  summarize(total = n())%>%
+  ggplot(aes(x = over10, y = total))+
+  geom_histogram(fill = "hot pink", stat = "identity")+
+  geom_text(aes(label = total, y=total + 2.5)) + 
+  theme(panel.background = element_rect(fill="white"))+
+  theme(panel.grid.major = element_blank()) + 
+  scale_x_discrete(labels = c('Yes', "No")) + 
+  labs(x = "Did I Sleep Before 10pm?", y = "Number of Occurences", title = "How Many Times Did I Sleep Before 10pm in Semester 1 of Junior Year?")
+  
+```
+<aside>
+
+I slept before 10pm on nearly 84% of my school days
+
+</aside>
+
+
+I was also curious to know which days of the week I would tend to sleep past 10pm the most.
+
+
+```{r, echo = FALSE}
+data1$day_of_week <- factor(data1$day_of_week, levels = c("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday"))
+data1 <- data1%>%
+  group_by(day_of_week)%>%
+  mutate(past10 = sum(over10 == TRUE))
+data1%>%
+  ggplot(aes(x = day_of_week, y = past10, color = day_of_week)) + 
+  geom_point(stat ="identity", size = 5) + 
+  theme(legend.position = "none") + 
+  theme(panel.grid.major = element_line(color = "gray", size = 0.05)) + 
+  theme(panel.background = element_blank()) + 
+  theme(axis.title.x = element_text(size = 11)) +
+  theme(axis.text.y.left = element_text(size = 10)) +
+  labs(x = "Day of Week", y = "Number of Occurences", title = "How Many Times Each Day of the Week Did I Sleep Past 10pm?")
+  
+```
+<aside>
+
+Sundays tended to be I would sleep past 10pm the most, partly due to late-night events that took place then.
+
+</aside>
+
+
+But, let's see what day of the week I would sleep the most on.
+
+```{r}
+total_sleep <- data
+total_sleep$day_of_week <- factor(total_sleep$day_of_week, levels = c("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday"))
+total_sleep <- total_sleep%>%
+  mutate("minutes" = hour(data1$sleep_hr)*60 + minute(data1$sleep_hr))
+total_sleep <- aggregate(total_sleep$minutes, by = list(total_sleep$day_of_week), FUN=mean)
+total_sleep%>%
+  rename(day_of_week = "Group.1", minutes = "x")%>%
+  ggplot(aes(x = day_of_week, y = minutes, fill = day_of_week)) + 
+  geom_histogram(stat = "identity") +
+  coord_cartesian(ylim = c(475, 500)) + 
+  geom_text(aes(label = round(minutes, digits = 1), vjust = -0.9)) + 
+  theme(legend.position = "none", panel.background = element_blank()) + 
+  labs(x = "Day of Week", y = "Minutes of Sleep", title = "Average Minutes of Sleep By Day of Week")
+```
+
+<aside>
+
+According to the graph, I slept the most on Tuesdays, while I slept the least on Sundays.
+
+</aside>
+
+
+Here is an overall line graph representing the times I went to bed before each school day. 
+NOTE: data is not included for ALL dates because I only kept track of my sleep times before school days. 
+
+
+```{r}
+month_data <- data
+month_data$date <- as.Date(month_data$date, "%m/%d/%Y")
+month_data <- month_data%>%
+  mutate(month = month(month_data$date))%>%
+  mutate("minutes" = hour(data$sleep_hr)*60 + minute(data$sleep_hr))
+month_data <- aggregate(month_data$minutes, by = list(month_data$month), FUN = mean)
+month_data%>%
+  rename(month = "Group.1", min = "x")%>%
+  ggplot(aes(x = month, y = min, fill = month))+
+  geom_bar(stat = "identity")+
+  coord_cartesian(ylim = c(475, 500)) + 
+  theme(panel.background = element_blank(), panel.grid = element_blank(),legend.position = "none") +
+  geom_text(aes(label = round(min, digits = 1), vjust = -0.9)) + 
+  labs(x = "Month Number", y = "Minutes", titlee = "Average Minutes of Sleep By Month")
 
 ```
+```{r fig.width=30, fig.height=20}
+data$date <- as.Date(data$date, "%m/%d/%Y")
+data$time_pm <- as.POSIXct(data$time_pm)
+graph <- data%>%
+  select(date, time_pm, sleep_hr)%>%
+  ggplot(aes(x = date, y = time_pm))+
+  geom_line(group = 1, color = "red", size = 2) + 
+  geom_point(size = 5) +
+  theme(axis.text.x = element_text(size = 50, angle = 45, hjust = 1), axis.text.y = element_text(size = 40), panel.background = element_blank(), axis.title = element_text(size = 35), plot.title = element_text(size = 50, color = "red"))+
+  scale_y_datetime(date_labels = "%I:%M:%S %p") +
+  geom_vline(xintercept = as.Date(c("0021-09-01", "0021-10-01", "0021-11-01", "0021-12-01"))) +
+  labs(x = "Month", y = "Time Slept", title = expression(underline("Trend of Sleeping Times")))
+graph
+```
+
+
+Overall, through this fun project, I was able to visualize my own data about my sleep for semester 1 of junior year. 
 
