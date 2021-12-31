@@ -1,7 +1,10 @@
 ---
 title: "About this site"
 description: |
-  Throughout my first semester of junior year, I collected data on what time I slept each day before school. In order to make meaning out of the data I collected, I decided to use this website to display some of my visualizations and findings. 
+  Throughout my first semester of junior year, I collected data on what time I slept each day before school, with the hopes of uncovering some interesting insights. In order to make meaning out of the data I collected, I decided to use this website to display some of my visualizations and findings. 
+  
+  I used R to analyze the data.
+  
 ---
 
 ```{r setup, include=FALSE}

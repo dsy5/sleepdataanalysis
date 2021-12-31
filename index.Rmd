@@ -102,8 +102,7 @@ According to the graph, I slept the most on Tuesdays, while I slept the least on
 </aside>
 
 
-Here is an overall line graph representing the times I went to bed before each school day. 
-NOTE: data is not included for ALL dates because I only kept track of my sleep times before school days. 
+I was even curious to know which month I slept the most in.
 
 
 ```{r}
@@ -123,6 +122,18 @@ month_data%>%
   labs(x = "Month Number", y = "Minutes", titlee = "Average Minutes of Sleep By Month")
 
 ```
+
+
+<aside>
+
+I slept the most in November, while I slept the least in December (partly because of studying for finals)
+
+</aside>
+
+
+Here is an overall line graph representing the times I went to bed before each school day. 
+NOTE: data is not included for ALL dates because I only kept track of my sleep times before school days. 
+
 ```{r fig.width=30, fig.height=20}
 data$date <- as.Date(data$date, "%m/%d/%Y")
 data$time_pm <- as.POSIXct(data$time_pm)
