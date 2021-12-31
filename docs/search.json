@@ -1,0 +1,21 @@
+{
+  "articles": [
+    {
+      "path": "about.html",
+      "title": "About this site",
+      "description": "Throughout my first semester of junior year, I collected data on what time I slept each day before school, with the hopes of uncovering some interesting insights. In order to make meaning out of the data I collected, I decided to use this website to display some of my visualizations and findings. \n\nI used R to analyze the data.\n",
+      "author": [],
+      "contents": "\n\n\n\n",
+      "last_modified": "2021-12-30T21:41:20-06:00"
+    },
+    {
+      "path": "index.html",
+      "title": "Analysis of Sleep Data",
+      "description": "Welcome to the website. I hope you enjoy it!\n",
+      "author": [],
+      "contents": "\nFirst, let’s see how many times I slept before 10pm. I always make an effort to sleep before 10pm, as I strive to obtain a good health.\n\n\n\nI slept before 10pm on nearly 84% of my school days\nI was also curious to know which days of the week I would tend to sleep past 10pm the most.\n\n\n\nSundays tended to be I would sleep past 10pm the most, partly due to late-night events that took place then.\nBut, let’s see what day of the week I would sleep the most on.\n\n\n\nAccording to the graph, I slept the most on Tuesdays, while I slept the least on Sundays.\nI was even curious to know which month I slept the most in.\n\n\n\nI slept the most in November, while I slept the least in December (partly because of studying for finals)\nHere is an overall line graph representing the times I went to bed before each school day. NOTE: data is not included for ALL dates because I only kept track of my sleep times before school days.\n\n\n\nOverall, through this fun project, I was able to visualize my own data about my sleep for semester 1 of junior year.\n\n\n\n",
+      "last_modified": "2021-12-30T21:44:10-06:00"
+    }
+  ],
+  "collections": []
+}
